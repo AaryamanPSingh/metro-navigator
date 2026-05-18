@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Route - Delhi Metro Navigator</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🚇 Delhi Metro Navigator</h1>
+        
+        <div class="summary">
+            <h2>{{ source }} → {{ destination }}</h2>
+            <div class="stats">
+                <div class="stat">
+                    <span class="stat-value">{{ cost }}</span>
+                    <span class="stat-label">Minutes</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value">{{ stops }}</span>
+                    <span class="stat-label">Stops</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value">₹{{ fare }}</span>
+                    <span class="stat-label">Fare</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="route">
+            <h3>Route</h3>
+            {% set current_line = '' %}
+            {% for station, line in details %}
+                {% if line != current_line %}
+                    {% if current_line != '' %}
+                        </div>
+                    {% endif %}
+                    <div class="line-section {{ line.split()[0].lower() }}">
+                    <div class="line-header">{{ line }}</div>
+                    {% set current_line = line %}
+                {% endif %}
+                <div class="station">
+                    {% if loop.first %}🔵{% elif loop.last %}🔴{% else %}⚪{% endif %}
+                    {{ station }}
+                    {% if loop.index < details|length and details[loop.index][1] != line %}
+                        <span class="interchange">🔄 Interchange</span>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            </div>
+        </div>
+        
+        <a href="/" class="btn">Search Again</a>
+    </div>
+</body>
+</html>

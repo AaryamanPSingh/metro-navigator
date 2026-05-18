@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Delhi Metro Navigator</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🚇 Delhi Metro Navigator</h1>
+        <p>Find the fastest route between any two stations</p>
+        
+        {% if error %}
+        <p class="error">{{ error }}</p>
+        {% endif %}
+        
+        <form method="POST" action="/search">
+            <label>Source Station</label>
+            <select name="source" required>
+                <option value="">Select station...</option>
+                {% for station in stations %}
+                <option value="{{ station.name }}">{{ station.name }}</option>
+                {% endfor %}
+            </select>
+            
+            <label>Destination Station</label>
+            <select name="destination" required>
+                <option value="">Select station...</option>
+                {% for station in stations %}
+                <option value="{{ station.name }}">{{ station.name }}</option>
+                {% endfor %}
+            </select>
+            
+            <button type="submit">Find Route</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -88,7 +88,7 @@ if __name__ == "__main__":
     conn = get_connection()
     cursor = conn.cursor(dictionary=True)
     
-    cursor.execute("SELECT station_id FROM Station WHERE name = 'Dwarka Sector 21'")
+    cursor.execute("SELECT station_id FROM Station WHERE name = 'Dwarka Sector - 21'")
     start = cursor.fetchone()
 
     cursor.execute("SELECT station_id FROM Station WHERE name = 'Hauz Khas'")
