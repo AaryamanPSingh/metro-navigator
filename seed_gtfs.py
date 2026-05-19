@@ -40,6 +40,8 @@ print(f"Loaded {len(stops)} stations")
 # Line colors from route_short_name
 def get_color(short_name):
     code = short_name.split('_')[0].upper()
+    second = short_name.split('_')[1].upper() if len(short_name.split('_')) > 1 else ''
+    
     mapping = {
         'R': 'Red',
         'Y': 'Yellow',
@@ -50,8 +52,12 @@ def get_color(short_name):
         'M': 'Magenta',
         'O': 'Orange',
         'A': 'Aqua',
-        'S': 'Rapid'
     }
+    
+    # Rapid Metro starts with R_SP
+    if code == 'R' and second == 'SP':
+        return 'Rapid'
+    
     return mapping.get(code, 'Unknown')
 
 # Load routes → Line table

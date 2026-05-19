@@ -26,10 +26,18 @@ def calculate_fare(path):
     orange_line_id = orange['line_id'] if orange else None
     cursor.fetchall()
     
+    # Get Rapid Line id
+    cursor.execute("SELECT line_id FROM Line WHERE color = 'Rapid'")
+    rapid = cursor.fetchone()
+    rapid_line_id = rapid['line_id'] if rapid else None
+    cursor.fetchall()
+
     regular_distance = 0
     airport_express_distance = 0
     airport_express_start = None
     airport_express_end = None
+    rapid_distance = 0
+    rapid_used = False
     
     for i in range(1, len(path)):
         station1_id = path[i-1][0]
@@ -52,6 +60,9 @@ def calculate_fare(path):
                 airport_express_start = station1_id
             airport_express_end = station2_id
             airport_express_distance += dist
+        elif line_id == rapid_line_id:
+            rapid_used = True
+            rapid_distance += dist
         else:
             regular_distance += dist
     
@@ -86,9 +97,10 @@ def calculate_fare(path):
     
     conn.close()
     
-    total_distance = round(regular_distance + airport_express_distance, 2)
-    total_fare = regular_fare + airport_express_fare
-    
+    rapid_fare = 20 if rapid_used else 0
+    total_distance = round(regular_distance + airport_express_distance + rapid_distance, 2)
+    total_fare = regular_fare + airport_express_fare + rapid_fare
+
     return total_fare, total_distance
 
 @app.route('/')
