@@ -70,12 +70,22 @@ def get_path_details(path):
     cursor = conn.cursor(dictionary=True)
     
     result = []
+    prev_station_id = None
+    
     for station_id, line_id in path:
         cursor.execute('SELECT name FROM Station WHERE station_id = %s', (station_id,))
         station = cursor.fetchone()
         cursor.execute('SELECT name FROM Line WHERE line_id = %s', (line_id,))
         line = cursor.fetchone()
+        
+        # Skip duplicate station, just update line of previous entry
+        if station_id == prev_station_id:
+            if result:
+                result[-1] = (result[-1][0], line['name'])
+            continue
+        
         result.append((station['name'], line['name']))
+        prev_station_id = station_id
     
     conn.close()
     return result
